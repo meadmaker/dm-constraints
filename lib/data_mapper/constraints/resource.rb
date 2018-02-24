@@ -2,8 +2,13 @@ module DataMapper
   module Constraints
     module Resource
       def before_destroy_hook
+        instance_variable_set('@_constraint_destroy_process', true)
         enforce_destroy_constraints
         super
+      end
+
+      def after_destroy_hook
+        remove_instance_variable('@_constraint_destroy_process')
       end
 
     private

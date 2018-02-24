@@ -17,8 +17,12 @@ module DataMapper
           when :destroy, :destroy!
             association.__send__(constraint)
           when :set_nil
-            Array(association).all? do |resource|
-              resource.update(inverse => nil)
+            if resource.instance_variable_get('@_constraint_destroy_process')
+              true
+            else
+              Array(association).all? do |resource|
+                resource.update(inverse => nil)
+              end
             end
           when :skip
             true  # do nothing
